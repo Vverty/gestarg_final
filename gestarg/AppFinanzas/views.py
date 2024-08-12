@@ -5,7 +5,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView, ListView
 from django.db.models.functions import TruncDay
+from django.views.generic.edit import CreateView, UpdateView, DeleteView     
+from django.urls import reverse_lazy
 
 from .models import Gasto, Ingreso, Cliente
 from .forms import GastoForm, IngresoForm, BuscarClienteForm, ClienteForm
@@ -13,168 +17,176 @@ from .forms import GastoForm, IngresoForm, BuscarClienteForm, ClienteForm
 
 
 
-@login_required
-def inicio(request):
-    total_ingresos = Ingreso.objects.aggregate(Sum('monto'))['monto__sum'] or 0
-    total_gastos = Gasto.objects.aggregate(Sum('monto'))['monto__sum'] or 0
-    cantidad_clientes = Cliente.objects.count()
+class InicioView(LoginRequiredMixin, TemplateView):
+    template_name = 'AppFinanzas/index.html'
 
-    ingresos_diarios = list(Ingreso.objects.values('fecha').annotate(total=Sum('monto')).order_by('fecha'))
-    gastos_diarios = list(Gasto.objects.values('fecha').annotate(total=Sum('monto')).order_by('fecha'))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    for ingreso in ingresos_diarios:
-        ingreso['fecha'] = ingreso['fecha'].strftime('%Y-%m-%d')
-        ingreso['total'] = float(ingreso['total'])
+        # Cálculos de ingresos, gastos y clientes
+        context['total_ingresos'] = Ingreso.objects.aggregate(Sum('monto'))['monto__sum'] or 0
+        context['total_gastos'] = Gasto.objects.aggregate(Sum('monto'))['monto__sum'] or 0
+        context['cantidad_clientes'] = Cliente.objects.count()
 
-    for gasto in gastos_diarios:
-        gasto['fecha'] = gasto['fecha'].strftime('%Y-%m-%d')
-        gasto['total'] = float(gasto['total'])
+        # Ingresos y gastos diarios
+        ingresos_diarios = list(Ingreso.objects.values('fecha').annotate(total=Sum('monto')).order_by('fecha'))
+        gastos_diarios = list(Gasto.objects.values('fecha').annotate(total=Sum('monto')).order_by('fecha'))
 
-    # Imprime los datos en la consola del servidor
-    print(json.dumps(ingresos_diarios, indent=2))
-    print(json.dumps(gastos_diarios, indent=2))
+        # Formatear las fechas y convertir a JSON
+        for ingreso in ingresos_diarios:
+            ingreso['fecha'] = ingreso['fecha'].strftime('%Y-%m-%d')
+            ingreso['total'] = float(ingreso['total'])
 
-    context = {
-        'total_ingresos': total_ingresos,
-        'total_gastos': total_gastos,
-        'cantidad_clientes': cantidad_clientes,
-        'ingresos_diarios': json.dumps(ingresos_diarios),  # Convertir a JSON
-        'gastos_diarios': json.dumps(gastos_diarios),    # Convertir a JSON
-    }
-    return render(request, 'AppFinanzas/index.html', context)
+        for gasto in gastos_diarios:
+            gasto['fecha'] = gasto['fecha'].strftime('%Y-%m-%d')
+            gasto['total'] = float(gasto['total'])
+
+        # Añadir los datos al contexto
+        context['ingresos_diarios'] = json.dumps(ingresos_diarios)
+        context['gastos_diarios'] = json.dumps(gastos_diarios)
+
+        return context
 
 #GASTOS
-@login_required
-def agregar_gasto(request):
-    if request.method == 'POST':
-        form = GastoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('MostrarGastos')
-    else:
-        form = GastoForm()
-    return render(request, 'AppFinanzas/agregar_gasto.html', {'form': form})
+class AgregarGastoView(LoginRequiredMixin, CreateView):
+    model = Gasto
+    form_class = GastoForm
+    template_name = 'AppFinanzas/agregar_gasto.html'
+    success_url = reverse_lazy('MostrarGastos')
 
-@login_required
-def mostrar_gastos(request):
-    query = request.GET.get('q')
-    if query:
-        gastos = Gasto.objects.filter(descripcion__icontains=query)
-    else:
-        gastos = Gasto.objects.all()
-    return render(request, 'AppFinanzas/mostrar_gastos.html', {'gastos': gastos, 'query': query})
+class MostrarGastosView(LoginRequiredMixin, ListView):
+    model = Gasto
+    template_name = 'AppFinanzas/mostrar_gastos.html'
+    context_object_name = 'gastos'
+    
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Gasto.objects.filter(descripcion__icontains=query)
+        else:
+            return Gasto.objects.all()
 
-@login_required
-def editar_gasto(request, id):
-    gasto = get_object_or_404(Gasto, id=id)
-    if request.method == 'POST':
-        form = GastoForm(request.POST, instance=gasto)
-        if form.is_valid():
-            form.save()
-            return redirect('MostrarGastos')
-    else:
-        form = GastoForm(instance=gasto)
-    return render(request, 'AppFinanzas/editar_gasto.html', {'form': form})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        return context
 
-@login_required
-def eliminar_gasto(request, id):
-    gasto = get_object_or_404(Gasto, id=id)
-    if request.method == 'POST':
-        gasto.delete()
-        return redirect('MostrarGastos')
-    return render(request, 'AppFinanzas/eliminar_gasto.html', {'gasto': gasto})
+class EditarGastoView(LoginRequiredMixin, UpdateView):
+    model = Gasto
+    form_class = GastoForm
+    template_name = 'AppFinanzas/editar_gasto.html'
+    context_object_name = 'form'
+
+    def get_success_url(self):
+        return reverse_lazy('MostrarGastos')
+    
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(Gasto, pk=pk)
+
+
+class EliminarGastoView(LoginRequiredMixin, DeleteView):
+    model = Gasto
+    template_name = 'AppFinanzas/eliminar_gasto.html'
+    context_object_name = 'gasto'
+    success_url = reverse_lazy('MostrarGastos')
+    
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(Gasto, pk=pk)
 
 #INGRESOS
-@login_required
-def agregar_ingreso(request):
-    if request.method == 'POST':
-        form = IngresoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('MostrarIngresos')
-    else:
-        form = IngresoForm()
-    return render(request, 'AppFinanzas/agregar_ingreso.html', {'form': form})
+class AgregarIngresoView(LoginRequiredMixin, CreateView):
+    model = Ingreso
+    form_class = IngresoForm
+    template_name = 'AppFinanzas/agregar_ingreso.html'
+    success_url = reverse_lazy('MostrarIngresos')
 
-@login_required
-def mostrar_ingresos(request):
-    query = request.GET.get('q')
-    if query:
-        ingresos = Ingreso.objects.filter(descripcion__icontains=query)
-    else:
-        ingresos = Ingreso.objects.all()
-    return render(request, 'AppFinanzas/mostrar_ingresos.html', {'ingresos': ingresos, 'query': query})
+class MostrarIngresosView(LoginRequiredMixin, ListView):
+    model = Ingreso
+    template_name = 'AppFinanzas/mostrar_ingresos.html'
+    context_object_name = 'ingresos'
+    paginate_by = 10  # Opcional: Puedes agregar paginación si es necesario
 
-@login_required
-def editar_ingreso(request, pk):
-    ingreso = get_object_or_404(Ingreso, pk=pk)
-    if request.method == 'POST':
-        form = IngresoForm(request.POST, instance=ingreso)
-        if form.is_valid():
-            form.save()
-            return redirect('MostrarIngresos')
-    else:
-        form = IngresoForm(instance=ingreso)
-    return render(request, 'AppFinanzas/editar_ingreso.html', {'form': form})
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Ingreso.objects.filter(descripcion__icontains=query)
+        return Ingreso.objects.all()
 
-@login_required
-def eliminar_ingreso(request, pk):
-    ingreso = get_object_or_404(Ingreso, pk=pk)
-    if request.method == 'POST':
-        ingreso.delete()
-        return redirect('MostrarIngresos')
-    return render(request, 'AppFinanzas/eliminar_ingreso.html', {'ingreso': ingreso})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        return context
+
+class EditarIngresoView(LoginRequiredMixin, UpdateView):
+    model = Ingreso
+    form_class = IngresoForm
+    template_name = 'AppFinanzas/editar_ingreso.html'
+    context_object_name = 'form'
+
+    def get_success_url(self):
+        return reverse_lazy('MostrarIngresos')
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(Ingreso, pk=pk)
+
+class EliminarIngresoView(LoginRequiredMixin, DeleteView):
+    model = Ingreso
+    template_name = 'AppFinanzas/eliminar_ingreso.html'
+    context_object_name = 'ingreso'
+    success_url = reverse_lazy('MostrarIngresos')
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(Ingreso, pk=pk)
 
 #CLIENTES
 
-@login_required
-def mostrar_clientes(request):
-    form = BuscarClienteForm(request.GET or None)
-    clientes = Cliente.objects.all()
+class MostrarClientesView(LoginRequiredMixin, ListView):
+    model = Cliente
+    template_name = 'AppFinanzas/mostrar_clientes.html'
+    context_object_name = 'clientes'
+    form_class = BuscarClienteForm
 
-    razon_social = request.GET.get('razon_social')
-    email = request.GET.get('email')
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        razon_social = self.request.GET.get('razon_social')
+        email = self.request.GET.get('email')
 
-    if razon_social:
-        clientes = clientes.filter(razon_social__icontains=razon_social)
-    if email:
-        clientes = clientes.filter(email__icontains=email)
+        if razon_social:
+            queryset = queryset.filter(razon_social__icontains=razon_social)
+        if email:
+            queryset = queryset.filter(email__icontains=email)
 
-    context = {
-        'clientes': clientes,
-        'form': form,
-    }
+        return queryset
 
-    return render(request, 'AppFinanzas/mostrar_clientes.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class(self.request.GET or None)
+        return context
 
-@login_required
-def agregar_cliente(request):
-    if request.method == 'POST':
-        form = ClienteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('MostrarClientes')
-    else:
-        form = ClienteForm()
-    return render(request, 'AppFinanzas/agregar_cliente.html', {'form': form})
+class AgregarClienteView(LoginRequiredMixin, CreateView):
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'AppFinanzas/agregar_cliente.html'
+    success_url = reverse_lazy('MostrarClientes')
 
-@login_required
-def editar_cliente(request, pk):
-    cliente = get_object_or_404(Cliente, pk=pk)
-    if request.method == 'POST':
-        form = ClienteForm(request.POST, instance=cliente)
-        if form.is_valid():
-            form.save()
-            return redirect('MostrarClientes')
-    else:
-        form = ClienteForm(instance=cliente)
-    return render(request, 'AppFinanzas/editar_cliente.html', {'form': form})
+class EditarClienteView(LoginRequiredMixin, UpdateView):
+    model = Cliente
+    form_class = ClienteForm
+    template_name = 'AppFinanzas/editar_cliente.html'
+    success_url = reverse_lazy('MostrarClientes')
+    pk_url_kwarg = 'pk'
 
-@login_required
-def eliminar_cliente(request, pk):
-    cliente = get_object_or_404(Cliente, pk=pk)
-    if request.method == 'POST':
-        cliente.delete()
-        return redirect('MostrarClientes')
-    return render(request, 'AppFinanzas/eliminar_cliente.html', {'cliente': cliente})
+class EliminarClienteView(LoginRequiredMixin, DeleteView):
+    model = Cliente
+    template_name = 'AppFinanzas/eliminar_cliente.html'
+    context_object_name = 'cliente'
+    success_url = reverse_lazy('MostrarClientes')
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(Cliente, pk=pk)
 

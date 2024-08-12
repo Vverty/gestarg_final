@@ -5,8 +5,7 @@ from .forms import UserRegisterForm, UserEditForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
-
-
+from django import forms
 
 def login_request(request):
 

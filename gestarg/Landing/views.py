@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from datetime import datetime
+from django.views.generic import TemplateView
 
-def nosotros(request):
-    return render(request, 'Landing/nosotros.html')
+class NosotrosView(TemplateView):
+    template_name = 'Landing/nosotros.html'
 
-def inicio_landing(request):
-    current_year = datetime.now().year
-    return render(request, 'Landing/index.html', {'current_year': current_year})
+class InicioLandingView(TemplateView):
+    template_name = 'Landing/index.html'
 
-def acerca_de_mi(request):
-    return render(request, 'Landing/about_me.html')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_year'] = datetime.now().year
+        return context
+
+class AboutView(TemplateView):
+    template_name = 'Landing/about_me.html'

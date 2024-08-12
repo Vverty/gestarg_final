@@ -1,19 +1,29 @@
 from django.contrib import admin
 from django.urls import path
 from AppFinanzas import views
+from .views import *
 
+#GASTOS
 urlpatterns = [
-    path('', views.inicio, name='Inicio'),
-    path('gastos/', views.mostrar_gastos, name='MostrarGastos'),
-    path('gastos/agregar/', views.agregar_gasto, name='AgregarGasto'),
-    path('gastos/editar/<int:id>/', views.editar_gasto, name='EditarGasto'),
-    path('gastos/eliminar/<int:id>/', views.eliminar_gasto, name='EliminarGasto'),
-    path('agregar-ingreso/', views.agregar_ingreso, name='AgregarIngreso'),
-    path('mostrar-ingresos/', views.mostrar_ingresos, name='MostrarIngresos'),
-    path('editar-ingreso/<int:pk>/', views.editar_ingreso, name='EditarIngreso'),
-    path('eliminar-ingreso/<int:pk>/', views.eliminar_ingreso, name='EliminarIngreso'),
-    path('agregar-cliente/', views.agregar_cliente, name='AgregarCliente'),
-    path('mostrar-clientes/', views.mostrar_clientes, name='MostrarClientes'),
-    path('editar-cliente/<int:pk>/', views.editar_cliente, name='EditarCliente'),
-    path('eliminar-cliente/<int:pk>/', views.eliminar_cliente, name='EliminarCliente'),
+    path('', InicioView.as_view(), name='Inicio'),
+    path('gastos/', MostrarGastosView.as_view(), name='MostrarGastos'),
+    path('gastos/agregar/', AgregarGastoView.as_view(), name='AgregarGasto'),
+    path('gastos/editar/<int:pk>/', EditarGastoView.as_view(), name='EditarGasto'),
+    path('gastos/eliminar/<int:pk>/', EliminarGastoView.as_view(), name='EliminarGasto')
+]
+
+#INGRESOS
+urlpatterns += [
+    path('ingresos/', MostrarIngresosView.as_view(), name='MostrarIngresos'),
+    path('ingresos/agregar/', AgregarIngresoView.as_view(), name='AgregarIngreso'),
+    path('ingresos/editar/<int:pk>/', EditarIngresoView.as_view(), name='EditarIngreso'),
+    path('ingresos/eliminar/<int:pk>/', EliminarIngresoView.as_view(), name='EliminarIngreso')
+]
+
+#CLIENTES
+urlpatterns += [
+    path('clientes/', MostrarClientesView.as_view(), name='MostrarClientes'),
+    path('clientes/agregar/', AgregarClienteView.as_view(), name='AgregarCliente'),
+    path('clientes/editar/<int:pk>/', EditarClienteView.as_view(), name='EditarCliente'),
+    path('clientes/eliminar/<int:pk>/', EliminarClienteView.as_view(), name='EliminarCliente')
 ]

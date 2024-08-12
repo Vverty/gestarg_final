@@ -1,0 +1,55 @@
+{% extends "AppFinanzas/base.html" %}
+
+{% block title %}Gastos{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Tus gastos</h1>
+
+<form method="get" action="{% url 'MostrarGastos' %}">
+    <input type="text" name="q" placeholder="Buscar por descripción" value="{{ query|default_if_none:'' }}">
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<p>Listado de gastos históricos:</p>
+<a href="{% url 'AgregarGasto' %}" class="btn btn-primary">Agregar Gasto</a>
+
+{% if gastos %}
+    <!-- Tabla de Gastos -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Tabla de Gastos
+        </div>
+        <div class="card-body">
+            <table id="datatablesGastos" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Monto</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gasto in gastos %}
+                    <tr>
+                        <td>{{ gasto.id }}</td>
+                        <td>{{ gasto.fecha }}</td>
+                        <td>{{ gasto.descripcion }}</td>
+                        <td>${{ gasto.monto }}</td>
+                        <td>
+                            <a href="{% url 'EditarGasto' gasto.id %}" class="btn btn-warning">Editar</a>
+                            <a href="{% url 'EliminarGasto' gasto.id %}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+<p style="margin-top: 20px;">No hay gastos registrados.</p>
+{% endif %}
+
+{% endblock %}

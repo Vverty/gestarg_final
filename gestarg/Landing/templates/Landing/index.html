@@ -1,0 +1,65 @@
+{% extends 'Landing/base.html' %}
+
+{% block title %}Bienvenido a Gestarg{% endblock %}
+
+{% block content %}
+{% load static %}
+<!-- Hero Section -->
+<header class="masthead text-white text-center" style="background: url('{% static 'Landing/assets/hero-bg.jpg' %}') no-repeat center center; background-size: cover; padding: 100px 0;">
+    <div class="hero-content">
+        <div class="container">
+            <!-- Fondo semi-transparente para mejorar la legibilidad del texto -->
+            <div class="hero-text-overlay">
+                <h1 class="fw-bold">Bienvenido a Gestarg</h1>
+                <p class="lead fw-bold">Gestiona tus finanzas de manera sencilla y eficiente.</p>
+                <a class="btn btn-primary btn-lg" href="{% url 'Login' %}">Login</a>
+                <a class="btn btn-secondary btn-lg" href="{% url 'Register' %}">Registrarse</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-piggy-bank fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Control de Gastos</h5>
+                        <p class="card-text">Registra y categoriza tus gastos de manera fácil.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-bar-chart-line fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Reportes Detallados</h5>
+                        <p class="card-text">Obtén reportes detallados sobre tus finanzas.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-check fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Alertas y Recordatorios</h5>
+                        <p class="card-text">Recibe alertas y recordatorios para tus pagos y presupuestos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="fw-light">Empieza a gestionar tus finanzas hoy mismo</h2>
+        <p class="lead">Crea una cuenta y descubre cómo Gestarg puede ayudarte a tomar el control de tus finanzas.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'Register' %}">Crear Cuenta</a>
+    </div>
+</section>
+{% endblock %}

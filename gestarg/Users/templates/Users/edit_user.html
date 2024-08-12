@@ -1,0 +1,77 @@
+{% extends 'AppFinanzas/base.html' %}
+
+{% load static %}
+
+{% block title %} Editar Perfil {% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-5 mb-4">Editar perfil de {{ usuario }}</h1>
+
+    <form action="" method="POST" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ mi_form.first_name.label_tag }}
+                {{ mi_form.first_name }}
+                <div class="invalid-feedback">
+                    Por favor, ingresa tu nombre.
+                </div>
+            </div>
+            <div class="col-md-6">
+                {{ mi_form.last_name.label_tag }}
+                {{ mi_form.last_name }}
+                <div class="invalid-feedback">
+                    Por favor, ingresa tu apellido.
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                {{ mi_form.email.label_tag }}
+                {{ mi_form.email }}
+                <div class="invalid-feedback">
+                    Por favor, ingresa un correo electrónico válido.
+                </div>
+            </div>
+        </div>
+        <!-- Agrega más campos aquí según sea necesario -->
+        
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <input type="submit" value="Actualizar" class="btn btn-primary">
+            </div>
+        </div>
+    </form>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <a href="{% url 'PasswordChange' %}" class="btn btn-outline-secondary">Cambiar Contraseña</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript para la validación del formulario
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+
+<style>
+    .container {
+        max-width: 600px;
+    }
+</style>
+{% endblock content %}

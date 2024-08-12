@@ -1,0 +1,57 @@
+{% extends "AppFinanzas/base.html" %}
+
+{% block title %}Ingresos{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Tus ingresos</h1>
+
+<form method="get" action="{% url 'MostrarIngresos' %}">
+    <input type="text" name="q" placeholder="Buscar por descripción" value="{{ query|default_if_none:'' }}">
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<p>Listado de ingresos históricos:</p>
+<a href="{% url 'AgregarIngreso' %}" class="btn btn-primary">Agregar Ingreso</a>
+
+{% if ingresos %}
+    <!-- Tabla de Ingresos -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Tabla de Ingresos
+        </div>
+        <div class="card-body">
+            <table id="datatablesIngresos" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Monto</th>
+                        <th>Cliente</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ingreso in ingresos %}
+                    <tr>
+                        <td>{{ ingreso.id }}</td>
+                        <td>{{ ingreso.fecha }}</td>
+                        <td>{{ ingreso.descripcion }}</td>
+                        <td>${{ ingreso.monto }}</td>
+                        <td>{{ ingreso.cliente.razon_social }}</td>
+                        <td>
+                            <a href="{% url 'EditarIngreso' ingreso.id %}" class="btn btn-warning">Editar</a>
+                            <a href="{% url 'EliminarIngreso' ingreso.id %}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+<p style="margin-top: 20px;">No hay ingresos registrados.</p>
+{% endif %}
+
+{% endblock %}

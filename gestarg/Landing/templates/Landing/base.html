@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>{% block title %}Gestarg{% endblock %}</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'Landing/assets/favicon.ico' %}" />
+    <!-- Core theme CSS (includes Bootstrap) -->
+    <link href="{% static 'Landing/css/styles.css' %}" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <style>
+        .footer-spacing {
+            height: 100px; /* Ajusta la altura según el espacio que desees */
+        }
+    </style>
+</head>
+<body>
+    <!-- Responsive navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'InicioLanding' %}">Gestarg</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'InicioLanding' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'Nosotros' %}">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'AboutMe' %}">Acerca de mí</a></li>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Main content -->
+    <main>
+        {% block content %}
+        <!-- Aquí se insertará el contenido específico de cada página -->
+        {% endblock %}
+    </main>
+    <!-- Espacio antes del footer -->
+    <div class="footer-spacing"></div>
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <div class="container">
+            <p class="mb-0">&copy; {{ current_year }} Gestarg. Todos los derechos reservados.</p>
+            <p>
+                Conectá conmigo en 
+                <a href="https://www.linkedin.com/in/felipe-lorenzo/" target="_blank" class="text-white">
+                    LinkedIn
+                </a>
+            </p>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS -->
+    <script src="{% static 'Landing/js/scripts.js' %}"></script>
+</body>
+</html>

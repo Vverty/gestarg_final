@@ -1,0 +1,13 @@
+{% extends "AppFinanzas/base.html" %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Eliminar Cliente</h1>
+<p>¿Estás seguro de que quieres eliminar este cliente?</p>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Eliminar" class="btn btn-danger">
+    <a href="{% url 'MostrarClientes' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

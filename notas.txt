@@ -1,0 +1,3 @@
+- Agrega login, logout y register (revisar si el register darselo a cualquier usuario o que sea personalizado)
+- Agregar login required para las views de la APP.
+- Filtrar por superusuario, staff, etc para las acciones en ingresos, gastos y clientes.

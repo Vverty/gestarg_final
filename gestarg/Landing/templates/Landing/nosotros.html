@@ -1,0 +1,82 @@
+{% extends 'Landing/base.html' %}
+
+{% block title %}Nosotros{% endblock %}
+
+{% block content %}
+{% load static %}
+<!-- Content section 1-->
+<section id="scroll">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-6 order-lg-2">
+                <div class="p-5">
+                    <img class="img-fluid rounded-circle" src="{% static 'Landing/assets/img/01.jpg' %}" alt="...">
+                </div>
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <div class="p-5">
+                    <h2 class="display-4">¿Quienes somos?</h2>
+                    <p>En Gestarg, somos un equipo apasionado y comprometido con la innovación en la gestión financiera. Fundada con la visión de transformar la forma en que las personas y empresas manejan sus recursos, nuestra empresa se basa en la experiencia y el conocimiento acumulado en el sector financiero y tecnológico. Nos dedicamos a ofrecer soluciones que simplifiquen, optimicen y potencien el manejo de las finanzas, ayudando a nuestros clientes a alcanzar sus objetivos con confianza y eficacia.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Content section 2-->
+<section>
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-6">
+                <div class="p-5">
+                    <img class="img-fluid rounded-circle" src="{% static 'Landing/assets/img/02.jpg' %}" alt="...">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="p-5">
+                    <h2 class="display-4">¿Qué ofrecemos?</h2>
+                    <p>Ofrecemos una gama completa de soluciones para la gestión financiera adaptadas a las necesidades de nuestros clientes. Desde herramientas avanzadas para el seguimiento de ingresos y gastos, hasta funciones integradas para la planificación y análisis financiero, nuestras soluciones están diseñadas para proporcionar una visión clara y precisa de tu situación económica. Nuestro objetivo es facilitar una gestión financiera efectiva y sin complicaciones, permitiéndote tomar decisiones informadas y estratégicas con facilidad.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Content section 3-->
+<section>
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-6 order-lg-2">
+                <div class="p-5">
+                    <img class="img-fluid rounded-circle" src="{% static 'Landing/assets/img/03.jpg' %}" alt="...">
+                </div>
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <div class="p-5">
+                    <h2 class="display-4">¡Trabajemos juntos!</h2>
+                    <p>Creemos que la colaboración es clave para el éxito. Estamos siempre en busca de nuevas oportunidades para asociarnos con individuos y empresas que compartan nuestra pasión por la innovación y la excelencia en la gestión financiera. Ya sea que estés interesado en una consulta personalizada, en explorar nuestras soluciones a medida o en desarrollar nuevas funcionalidades, estamos aquí para trabajar contigo y ayudarte a alcanzar tus metas. Contáctanos hoy mismo y descubre cómo podemos crear juntos un futuro financiero más brillante.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+<footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+        <p class="mb-0">&copy; {{ current_year }} Gestarg. Todos los derechos reservados.</p>
+        <p>
+            Conectá conmigo en 
+            <a href="https://www.linkedin.com/in/felipe-lorenzo/" target="_blank" class="text-white">
+                LinkedIn
+            </a>
+        </p>
+    </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<!-- Bootstrap core JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS -->
+<script src="{% static 'Landing/js/scripts.js' %}"></script>
+{% endblock %}

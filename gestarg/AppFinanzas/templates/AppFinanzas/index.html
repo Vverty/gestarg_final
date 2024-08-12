@@ -1,0 +1,35 @@
+{% extends "AppFinanzas/base.html" %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Bienvenido a GestArg</h1>
+<p>Una página para manejar todos los ingresos y gastos de tu emprendimiento.</p>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Total de Ingresos</div>
+            <div class="card-body">
+                <h5 class="card-title">${{ total_ingresos }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-header">Total de Gastos</div>
+            <div class="card-body">
+                <h5 class="card-title">${{ total_gastos }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Cantidad de Clientes</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ cantidad_clientes }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

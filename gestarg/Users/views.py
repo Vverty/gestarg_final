@@ -36,7 +36,7 @@ def register(request):
         form = UserRegisterForm(request.POST, request.FILES)  # Añadido request.FILES para manejar archivos
         if form.is_valid():
             form.save()
-            return redirect('AppFinanzas')  # Redirige a la página de inicio o a donde necesites
+            return redirect('Login')  # Redirige a la página de inicio o a donde necesites
         else:
             msg_register = "Error en los datos ingresados"
     else:

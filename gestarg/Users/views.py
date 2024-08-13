@@ -7,6 +7,10 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django import forms
 from .models import Profile
+from django.views.generic import ListView, View
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.urls import reverse
 
 def login_request(request):
 
@@ -78,5 +82,31 @@ def cambiar_contrasenia(request):
     
     return render(request, 'Users/password_change.html', {'form': form})
 
+class ManageStaffView(UserPassesTestMixin, ListView):
+    model = User
+    template_name = 'Users/manage_staff.html'
+    context_object_name = 'usuarios'
 
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        # Excluye a los superusuarios de la lista
+        return User.objects.filter(is_superuser=False)
+
+    def post(self, request, *args, **kwargs):
+        user_id = request.POST.get('user_id')
+        action = request.POST.get('action')
+        user = User.objects.get(id=user_id)
+
+        if action == 'add_staff':
+            user.is_staff = True
+            user.save()
+        elif action == 'remove_staff':
+            user.is_staff = False
+            user.save()
+        elif action == 'delete_user':
+            user.delete()
+
+        return redirect('ManageStaff')
 

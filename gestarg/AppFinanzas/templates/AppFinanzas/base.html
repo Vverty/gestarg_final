@@ -44,7 +44,9 @@
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'MostrarGastos' %}">Gastos</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'MostrarIngresos' %}">Ingresos</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'MostrarClientes' %}">Clientes</a>
-                    
+                    {% if request.user.is_superuser %}
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'ManageStaff' %}">Manejar Staff</a>
+                    {% endif %}
                     {% comment %}
                             <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'Historial' %}">Historial</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'Logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>

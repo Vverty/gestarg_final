@@ -1,0 +1,43 @@
+{% extends 'AppFinanzas/base.html' %}
+
+{% block title %}Gestionar Usuarios Staff{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-5 mb-4">Gestionar Usuarios Staff</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Es Staff</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.username }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.is_staff }}</td>
+                <td>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{ usuario.id }}">
+                        
+                        {% if usuario.is_staff %}
+                            <button type="submit" name="action" value="remove_staff" class="btn btn-danger btn-sm">Quitar Staff</button>
+                        {% else %}
+                            <button type="submit" name="action" value="add_staff" class="btn btn-success btn-sm">Hacer Staff</button>
+                        {% endif %}
+                        
+                        <button type="submit" name="action" value="delete_user" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">Eliminar Usuario</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

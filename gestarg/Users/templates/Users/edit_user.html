@@ -1,15 +1,14 @@
 {% extends 'AppFinanzas/base.html' %}
 
-{% load static %}
-
 {% block title %} Editar Perfil {% endblock title %}
 
 {% block content %}
 <div class="container">
-    <h1 class="mt-5 mb-4">Editar perfil de {{ usuario }}</h1>
+    <h1 class="mt-5 mb-4">Editar perfil de {{ usuario.username }}</h1>
 
-    <form action="" method="POST" class="needs-validation" novalidate>
+    <form action="" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
         {% csrf_token %}
+
         <div class="row mb-3">
             <div class="col-md-6">
                 {{ mi_form.first_name.label_tag }}
@@ -26,6 +25,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row mb-3">
             <div class="col-md-12">
                 {{ mi_form.email.label_tag }}
@@ -35,8 +35,22 @@
                 </div>
             </div>
         </div>
-        <!-- Agrega más campos aquí según sea necesario -->
-        
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                {{ mi_form.profile_image.label_tag }}
+                {{ mi_form.profile_image }}
+                {% if user.profile.profile_image and user.profile.profile_image.url %}
+                    <div class="mb-3">
+                        <img src="{{ user.profile.profile_image.url }}" alt="Imagen de Perfil" style="max-width: 150px; max-height: 150px; border-radius: 50%;">
+                    </div>
+                {% endif %}
+                <div class="invalid-feedback">
+                    Por favor, selecciona una imagen de perfil válida.
+                </div>
+            </div>
+        </div>
+
         <div class="row mb-4">
             <div class="col-md-12">
                 <input type="submit" value="Actualizar" class="btn btn-primary">
@@ -51,27 +65,12 @@
     </div>
 </div>
 
-<script>
-    // JavaScript para la validación del formulario
-    (function () {
-        'use strict'
-        var forms = document.querySelectorAll('.needs-validation')
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
-</script>
-
 <style>
     .container {
         max-width: 600px;
+    }
+    img {
+        border-radius: 50%;
     }
 </style>
 {% endblock content %}

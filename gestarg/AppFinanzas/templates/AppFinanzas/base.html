@@ -44,9 +44,13 @@
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'MostrarGastos' %}">Gastos</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'MostrarIngresos' %}">Ingresos</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'MostrarClientes' %}">Clientes</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'EditarPerfil' %}">Perfil</a>
+                    
+                    {% comment %}
+                            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'EditarPerfil' %}">Perfil</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'Logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>
 
+                    {% endcomment %}
+                    
 <!-- Formulario oculto para la solicitud POST -->
                     <form id="logout-form" method="post" action="{% url 'Logout' %}" style="display: none;">
                         {% csrf_token %}
@@ -62,17 +66,36 @@
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                                <li class="nav-item active"><a class="nav-link" href="#!">Home</a></li>
+                                
+                                {% comment %}
+                                                                    <li class="nav-item active"><a class="nav-link" href="#!">Home</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
+                                {% endcomment %}
+                                    
+
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <!-- Mostrar la imagen de perfil en el dropdown -->
+                                        {% if user.profile.profile_image %}
+                                            <img src="{{ user.profile.profile_image.url }}" alt="Imagen de Perfil" class="profile-img">
+                                        {% else %}
+                                            <img src="{% static 'default_profile_image.jpg' %}" alt="Imagen de Perfil" class="profile-img">
+                                        {% endif %}
+                                        {{ user.username }} <!-- Mostrar el nombre de usuario -->
+                                    </a>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#!">Action</a>
-                                        <a class="dropdown-item" href="#!">Another action</a>
+                                        <!-- Opciones del menú desplegable -->
+                                        <a class="dropdown-item" href="{% url 'EditarPerfil' %}">Perfil</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#!">Something else here</a>
+                                        <a class="dropdown-item" href="{% url 'Logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>
                                     </div>
                                 </li>
+                                
+                                <!-- Formulario para el logout -->
+                                <form id="logout-form" action="{% url 'Logout' %}" method="POST" style="display: none;">
+                                    {% csrf_token %}
+                                </form>
+                                
                             </ul>
                         </div>
                     </div>
@@ -101,4 +124,19 @@
         <!-- Core theme JS-->
         <script src="{% static 'AppFinanzas/js/scripts.js' %}"></script>
     </body>
+    <style>
+        .profile-img {
+            width: 30px; /* Ajusta el tamaño según lo necesites */
+            height: 30px; /* Mantiene la proporción */
+            border-radius: 50%; /* Hace la imagen circular */
+            object-fit: cover; /* Ajusta el contenido de la imagen para cubrir el área sin distorsionarse */
+            margin-right: 8px; /* Espacio entre la imagen y el texto */
+        }
+    
+        .nav-link {
+            display: flex; /* Asegura que la imagen y el texto estén alineados horizontalmente */
+            align-items: center; /* Alinea verticalmente la imagen con el texto */
+        }
+    </style>
+    
 </html>

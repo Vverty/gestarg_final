@@ -12,7 +12,7 @@
         </div>
     {% endif %}
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">  <!-- Añadido enctype para archivos -->
         {% csrf_token %}
 
         <div class="mb-3">
@@ -37,6 +37,12 @@
             <label for="{{ form.password2.id_for_label }}" class="form-label">Repetir Contraseña</label>
             <input type="password" name="password2" id="{{ form.password2.id_for_label }}" class="form-control">
             {{ form.password2.errors }}
+        </div>
+
+        <div class="mb-3">
+            <label for="profile_image" class="form-label">Imagen de Perfil</label>
+            <input type="file" name="profile_image" id="profile_image" class="form-control">
+            {{ form.profile_image.errors }}
         </div>
 
         <button type="submit" class="btn btn-primary">Registrar</button>

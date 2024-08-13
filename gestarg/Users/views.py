@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django import forms
+from .models import Profile
 
 def login_request(request):
 
@@ -30,54 +31,36 @@ def login_request(request):
     return render(request, "Users/login.html", {"form": form, "msg_login": msg_login})
 
 def register(request):
-
     msg_register = ""
     if request.method == 'POST':
-
-        form = UserRegisterForm(request.POST)
+        form = UserRegisterForm(request.POST, request.FILES)  # Añadido request.FILES para manejar archivos
         if form.is_valid():
-            # Si los datos ingresados en el form son válidos, con form.save()
-            # creamos un nuevo user usando esos datos
             form.save()
-            return render(request,"Landing/index.html")
-        
-        msg_register = "Error en los datos ingresados"
+            return redirect('AppFinanzas')  # Redirige a la página de inicio o a donde necesites
+        else:
+            msg_register = "Error en los datos ingresados"
+    else:
+        form = UserRegisterForm()
 
-    form = UserRegisterForm()     
-    return render(request,"Users/register.html" ,  {"form":form, "msg_register": msg_register})
+    return render(request, "Users/register.html", {"form": form, "msg_register": msg_register})
 
 # Vista de editar el perfil
 # Obligamos a loguearse para editar los datos del usuario activo
 @login_required
 def editar_perfil(request):
-
-    # El usuario para poder editar su perfil primero debe estar logueado.
-    # Al estar logueado, podremos encontrar dentro del request la instancia
-    # del usuario -> request.user
     usuario = request.user
 
     if request.method == 'POST':
-
-        miFormulario = UserEditForm(request.POST, instance=request.user)
-
+        miFormulario = UserEditForm(request.POST, request.FILES, instance=usuario)
         if miFormulario.is_valid():
-
             miFormulario.save()
-
-            # Retornamos al inicio una vez guardado los datos
-            return render(request, "AppFinanzas/index.html")
+            return redirect('EditarPerfil')  # Redirige a la página principal u otra página deseada
 
     else:
-        miFormulario = UserEditForm(instance=request.user)
+        miFormulario = UserEditForm(instance=usuario)
 
-    return render(
-        request,
-        "Users/edit_user.html",
-        {
-            "mi_form": miFormulario,
-            "usuario": usuario
-        }
-    )
+    return render(request, "Users/edit_user.html", {"mi_form": miFormulario, "usuario": usuario})
+
 
 @login_required
 def cambiar_contrasenia(request):

@@ -6,12 +6,12 @@
 <h1 class="mt-4">Tus clientes</h1>
 
 <p>Listado de clientes:</p>
-<div class="mb-3">
-    <form method="GET" class="d-inline-block">
-        {{ form.as_p }}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <form method="GET" action="{% url 'MostrarClientes' %}" class="d-flex align-items-center gap-2">
+        {{ form.as_p|safe }}
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
-    <a href="{% url 'AgregarCliente' %}" class="btn btn-success ml-2">Agregar Cliente</a>
+    <a href="{% url 'AgregarCliente' %}" class="btn btn-success">Agregar Cliente</a>
 </div>
 
 {% if clientes %}

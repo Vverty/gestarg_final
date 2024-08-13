@@ -202,15 +202,28 @@ class MostrarIngresosView(LoginRequiredMixin, ListView):
     paginate_by = 10  # Opcional: Puedes agregar paginación si es necesario
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         query = self.request.GET.get('q')
+        cliente_id = self.request.GET.get('cliente')
+
         if query:
-            return Ingreso.objects.filter(descripcion__icontains=query)
-        return Ingreso.objects.all()
+            queryset = queryset.filter(descripcion__icontains=query)
+
+        if cliente_id:
+            queryset = queryset.filter(cliente_id=cliente_id)  # Ajusta según el nombre del campo en tu modelo
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('q', '')
+        context['selected_cliente'] = self.request.GET.get('cliente', '')
+
+        # Obtener la lista de clientes para la lista desplegable
+        context['clientes'] = Cliente.objects.all()  # Ajusta si necesitas algún filtro adicional
+
         return context
+
 
 class VerIngresoView(LoginRequiredMixin, DetailView):
     model = Ingreso

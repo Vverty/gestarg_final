@@ -5,13 +5,25 @@
 {% block content %}
 <h1 class="mt-4">Tus ingresos</h1>
 
-<form method="get" action="{% url 'MostrarIngresos' %}">
-    <input type="text" name="q" placeholder="Buscar por descripción" value="{{ query|default_if_none:'' }}">
+<form method="get" action="{% url 'MostrarIngresos' %}" class="d-flex align-items-center gap-3 mb-4">
+    <div class="form-group flex-grow-1">
+        <input type="text" name="q" placeholder="Buscar por descripción" value="{{ query|default_if_none:'' }}" class="form-control">
+    </div>
+    <div class="form-group flex-grow-1">
+        <select name="cliente" class="form-control">
+            <option value="">-- Cliente: Todos --</option>
+            {% for cliente in clientes %}
+                <option value="{{ cliente.id }}" {% if cliente.id|stringformat:"s" == selected_cliente %}selected{% endif %}>{{ cliente.razon_social }}</option>
+            {% empty %}
+                <option value="">No hay clientes disponibles</option>
+            {% endfor %}
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Buscar</button>
 </form>
 
 <p>Listado de ingresos históricos:</p>
-<a href="{% url 'AgregarIngreso' %}" class="btn btn-primary">Agregar Ingreso</a>
+<a href="{% url 'AgregarIngreso' %}" class="btn btn-primary mb-3">Agregar Ingreso</a>
 
 {% if ingresos %}
     <!-- Tabla de Ingresos -->
@@ -87,4 +99,5 @@
         })
     });
 </script>
+
 {% endblock %}

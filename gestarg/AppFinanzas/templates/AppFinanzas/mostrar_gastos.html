@@ -5,13 +5,15 @@
 {% block content %}
 <h1 class="mt-4">Tus gastos</h1>
 
-<form method="get" action="{% url 'MostrarGastos' %}">
-    <input type="text" name="q" placeholder="Buscar por descripción" value="{{ query|default_if_none:'' }}">
+<form method="get" action="{% url 'MostrarGastos' %}" class="d-flex align-items-center gap-2 mb-4">
+    <div class="form-group flex-grow-1 me-2">
+        <input type="text" name="q" class="form-control" placeholder="Buscar por descripción" value="{{ query|default_if_none:'' }}">
+    </div>
     <button type="submit" class="btn btn-primary">Buscar</button>
 </form>
 
 <p>Listado de gastos históricos:</p>
-<a href="{% url 'AgregarGasto' %}" class="btn btn-primary">Agregar Gasto</a>
+<a href="{% url 'AgregarGasto' %}" class="btn btn-primary mb-3">Agregar Gasto</a>
 
 {% if gastos %}
     <!-- Tabla de Gastos -->

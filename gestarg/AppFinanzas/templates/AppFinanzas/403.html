@@ -1,0 +1,29 @@
+{% extends "AppFinanzas/base.html" %}
+
+{% block title %}Acceso Denegado{% endblock %}
+
+{% block content %}
+<div class="mt-4 text-center">
+    <h1 class="display-4 text-danger">403 - Acceso Denegado</h1>
+    <p class="lead">Lo sentimos, no tienes permiso para acceder a esta página ya que debes ser usuario Staff.</p>
+    <p>Por favor, contacta al administrador si crees que esto es un error.</p>
+    <a href="{% url 'Inicio' %}" class="btn btn-primary mt-3">Volver al Inicio</a>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 offset-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">¿Qué hacer ahora?</div>
+            <div class="card-body">
+                <h5 class="card-title">Opciones disponibles:</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-arrow-left"></i> <a href="javascript:history.back()" class="text-white">Regresar a la página anterior</a></li>
+                    <li><i class="fas fa-home"></i> <a href="{% url 'Inicio' %}" class="text-white">Ir a la página de inicio</a></li>
+                    <li><i class="fas fa-envelope"></i> <a href="mailto:felipe.lorenzo@gestarg.com" class="text-white">Contactar al soporte</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

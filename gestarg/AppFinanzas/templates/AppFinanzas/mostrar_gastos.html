@@ -39,9 +39,31 @@
                         <td>{{ gasto.descripcion }}</td>
                         <td>${{ gasto.monto }}</td>
                         <td>
+                            <!-- Botón Detalle Habilitado -->
                             <a href="{% url 'VerGasto' gasto.id %}" class="btn btn-info">Detalle</a>
-                            <a href="{% url 'EditarGasto' gasto.id %}" class="btn btn-warning">Editar</a>
-                            <a href="{% url 'EliminarGasto' gasto.id %}" class="btn btn-danger">Eliminar</a>
+                            
+                            <!-- Botones Editar y Eliminar Deshabilitados con Tooltip -->
+                            {% if user.is_staff %}
+                                <a href="{% url 'EditarGasto' gasto.id %}" class="btn btn-warning">Editar</a>
+                                <a href="{% url 'EliminarGasto' gasto.id %}" class="btn btn-danger">Eliminar</a>
+                            {% else %}
+                                <a href="#" class="btn btn-secondary" 
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top" 
+                                   title="Debes ser miembro del staff" 
+                                   tabindex="-1" 
+                                   aria-disabled="true">
+                                    Editar
+                                </a>
+                                <a href="#" class="btn btn-secondary" 
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top" 
+                                   title="Debes ser miembro del staff" 
+                                   tabindex="-1" 
+                                   aria-disabled="true">
+                                    Eliminar
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -53,4 +75,16 @@
 <p style="margin-top: 20px;">No hay gastos registrados.</p>
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Inicializar tooltips
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
 {% endblock %}

@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView, ListView
 from django.views.generic.detail import DetailView
 from django.db.models.functions import TruncDay
@@ -50,7 +50,7 @@ class InicioView(LoginRequiredMixin, TemplateView):
         return context
 
 #GASTOS
-class AgregarGastoView(LoginRequiredMixin, CreateView):
+class AgregarGastoView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Gasto
     form_class = GastoForm
     template_name = 'AppFinanzas/agregar_gasto.html'
@@ -70,6 +70,14 @@ class AgregarGastoView(LoginRequiredMixin, CreateView):
         form.instance.usuario = self.request.user
         return super().form_valid(form)
     
+    def test_func(self):
+        # Verificar si el usuario es miembro del staff
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        # Redirigir a la página de error 403 personalizada
+        return redirect('403') 
+    
 class MostrarGastosView(LoginRequiredMixin, ListView):
     model = Gasto
     template_name = 'AppFinanzas/mostrar_gastos.html'
@@ -87,7 +95,7 @@ class MostrarGastosView(LoginRequiredMixin, ListView):
         context['query'] = self.request.GET.get('q', '')
         return context
 
-class EditarGastoView(LoginRequiredMixin, UpdateView):
+class EditarGastoView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Gasto
     form_class = GastoForm
     template_name = 'AppFinanzas/editar_gasto.html'
@@ -101,6 +109,14 @@ class EditarGastoView(LoginRequiredMixin, UpdateView):
         # Añadir el usuario actual al kwargs para el formulario
         kwargs['user'] = self.request.user
         return kwargs
+    
+    def test_func(self):
+        # Verificar si el usuario es miembro del staff
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        # Redirigir a la página de error 403 personalizada
+        return redirect('403') 
 
     def form_valid(self, form):
         # Asegurarse de que el campo usuario se establezca correctamente
@@ -119,7 +135,7 @@ class VerGastoView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
-class EliminarGastoView(LoginRequiredMixin, DeleteView):
+class EliminarGastoView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Gasto
     template_name = 'AppFinanzas/eliminar_gasto.html'
     context_object_name = 'gasto'
@@ -129,8 +145,16 @@ class EliminarGastoView(LoginRequiredMixin, DeleteView):
         pk = self.kwargs.get('pk')
         return get_object_or_404(Gasto, pk=pk)
 
+    def test_func(self):
+        # Verificar si el usuario es miembro del staff
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        # Redirigir a la página de error 403 personalizada
+        return redirect('403') 
+
 #INGRESOS
-class AgregarIngresoView(LoginRequiredMixin, CreateView):
+class AgregarIngresoView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Ingreso
     form_class = IngresoForm
     template_name = 'AppFinanzas/agregar_ingreso.html'
@@ -150,6 +174,14 @@ class AgregarIngresoView(LoginRequiredMixin, CreateView):
         # Establecer el usuario directamente en el formulario antes de guardarlo
         form.instance.usuario = self.request.user
         return super().form_valid(form)
+    
+    def test_func(self):
+        # Verificar si el usuario es miembro del staff
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        # Redirigir a la página de error 403 personalizada
+        return redirect('403') 
 
 class MostrarIngresosView(LoginRequiredMixin, ListView):
     model = Ingreso
@@ -177,7 +209,7 @@ class VerIngresoView(LoginRequiredMixin, DetailView):
         pk = self.kwargs.get('pk')
         return get_object_or_404(Ingreso, pk=pk)
 
-class EditarIngresoView(LoginRequiredMixin, UpdateView):
+class EditarIngresoView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Ingreso
     form_class = IngresoForm
     template_name = 'AppFinanzas/editar_ingreso.html'
@@ -196,8 +228,16 @@ class EditarIngresoView(LoginRequiredMixin, UpdateView):
         # Establecer el usuario directamente en el formulario antes de guardarlo
         form.instance.usuario = self.request.user
         return super().form_valid(form)
+    
+    def test_func(self):
+        # Verificar si el usuario es miembro del staff
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        # Redirigir a la página de error 403 personalizada
+        return redirect('403') 
 
-class EliminarIngresoView(LoginRequiredMixin, DeleteView):
+class EliminarIngresoView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ingreso
     template_name = 'AppFinanzas/eliminar_ingreso.html'
     context_object_name = 'ingreso'
@@ -206,6 +246,14 @@ class EliminarIngresoView(LoginRequiredMixin, DeleteView):
     def get_object(self, queryset=None):
         pk = self.kwargs.get('pk')
         return get_object_or_404(Ingreso, pk=pk)
+    
+    def test_func(self):
+        # Verificar si el usuario es miembro del staff
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        # Redirigir a la página de error 403 personalizada
+        return redirect('403') 
 
 #CLIENTES
 
@@ -237,20 +285,36 @@ class VerClienteView(DetailView):
     template_name = 'AppFinanzas/ver_cliente.html'
     context_object_name = 'cliente'
     
-class AgregarClienteView(LoginRequiredMixin, CreateView):
+class AgregarClienteView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Cliente
     form_class = ClienteForm
     template_name = 'AppFinanzas/agregar_cliente.html'
     success_url = reverse_lazy('MostrarClientes')
+    
+    def test_func(self):
+        # Verificar si el usuario es miembro del staff
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        # Redirigir a la página de error 403 personalizada
+        return redirect('403') 
 
-class EditarClienteView(LoginRequiredMixin, UpdateView):
+class EditarClienteView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Cliente
     form_class = ClienteForm
     template_name = 'AppFinanzas/editar_cliente.html'
     success_url = reverse_lazy('MostrarClientes')
     pk_url_kwarg = 'pk'
 
-class EliminarClienteView(LoginRequiredMixin, DeleteView):
+    def test_func(self):
+        # Verificar si el usuario es miembro del staff
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        # Redirigir a la página de error 403 personalizada
+        return redirect('403') 
+
+class EliminarClienteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Cliente
     template_name = 'AppFinanzas/eliminar_cliente.html'
     context_object_name = 'cliente'
@@ -259,4 +323,12 @@ class EliminarClienteView(LoginRequiredMixin, DeleteView):
     def get_object(self, queryset=None):
         pk = self.kwargs.get('pk')
         return get_object_or_404(Cliente, pk=pk)
+    
+    def test_func(self):
+        # Verificar si el usuario es miembro del staff
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        # Redirigir a la página de error 403 personalizada
+        return redirect('403') 
 

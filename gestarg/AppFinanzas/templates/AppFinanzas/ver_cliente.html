@@ -18,9 +18,40 @@
         <p><strong>Fecha de Salida:</strong> {{ cliente.fecha_salida }}</p>
         <p><strong>Rubro:</strong> {{ cliente.rubro }}</p>
         <p><strong>Usuario:</strong> {{ cliente.usuario.username }}</p>
-        <a href="{% url 'EditarCliente' cliente.id %}" class="btn btn-warning">Editar</a>
-        <a href="{% url 'EliminarCliente' cliente.id %}" class="btn btn-danger">Eliminar</a>
+        {% if user.is_staff %}
+            <a href="{% url 'EditarCliente' cliente.id %}" class="btn btn-warning">Editar</a>
+            <a href="{% url 'EliminarCliente' cliente.id %}" class="btn btn-danger">Eliminar</a>
+        {% else %}
+            <a href="#" class="btn btn-secondary" 
+               data-bs-toggle="tooltip" 
+               data-bs-placement="top" 
+               title="Debes ser miembro del staff" 
+               tabindex="-1" 
+               aria-disabled="true">
+                Editar
+            </a>
+            <a href="#" class="btn btn-secondary" 
+               data-bs-toggle="tooltip" 
+               data-bs-placement="top" 
+               title="Debes ser miembro del staff" 
+               tabindex="-1" 
+               aria-disabled="true">
+                Eliminar
+            </a>
+        {% endif %}
         <a href="{% url 'MostrarClientes' %}" class="btn btn-primary">Volver</a>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Inicializar tooltips
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
 {% endblock %}

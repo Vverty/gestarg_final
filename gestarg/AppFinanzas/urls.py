@@ -6,6 +6,7 @@ from .views import *
 #GASTOS
 urlpatterns = [
     path('', InicioView.as_view(), name='Inicio'),
+    path('403/', TemplateView.as_view(template_name="AppFinanzas/403.html"), name='403'),
     path('gastos/', MostrarGastosView.as_view(), name='MostrarGastos'),
     path('gastos/agregar/', AgregarGastoView.as_view(), name='AgregarGasto'),
     path('gastos/detalle/<int:pk>/', VerGastoView.as_view(), name='VerGasto'),

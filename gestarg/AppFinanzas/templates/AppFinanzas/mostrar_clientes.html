@@ -41,8 +41,27 @@
                         <td>{{ cliente.telefono }}</td>
                         <td>
                             <a href="{% url 'VerCliente' cliente.id %}" class="btn btn-info">Detalle</a>
-                            <a href="{% url 'EditarCliente' cliente.id %}" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="{% url 'EliminarCliente' cliente.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                            {% if user.is_staff %}
+                                <a href="{% url 'EditarCliente' cliente.id %}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="{% url 'EliminarCliente' cliente.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                            {% else %}
+                                <a href="#" class="btn btn-secondary btn-sm"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="Debes ser miembro del staff"
+                                   tabindex="-1"
+                                   aria-disabled="true">
+                                    Editar
+                                </a>
+                                <a href="#" class="btn btn-secondary btn-sm"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="Debes ser miembro del staff"
+                                   tabindex="-1"
+                                   aria-disabled="true">
+                                    Eliminar
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -54,4 +73,16 @@
     <p style="margin-top: 20px;">No hay clientes disponibles.</p>
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Inicializar tooltips
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
 {% endblock %}

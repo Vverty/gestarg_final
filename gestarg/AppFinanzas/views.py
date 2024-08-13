@@ -26,28 +26,43 @@ class InicioView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         # Cálculos de ingresos, gastos y clientes
-        context['total_ingresos'] = Ingreso.objects.aggregate(Sum('monto'))['monto__sum'] or 0
-        context['total_gastos'] = Gasto.objects.aggregate(Sum('monto'))['monto__sum'] or 0
+        context['total_ingresos'] = float(Ingreso.objects.aggregate(Sum('monto'))['monto__sum'] or 0)
+        context['total_gastos'] = float(Gasto.objects.aggregate(Sum('monto'))['monto__sum'] or 0)
         context['cantidad_clientes'] = Cliente.objects.count()
 
         # Ingresos y gastos diarios
-        ingresos_diarios = list(Ingreso.objects.values('fecha').annotate(total=Sum('monto')).order_by('fecha'))
-        gastos_diarios = list(Gasto.objects.values('fecha').annotate(total=Sum('monto')).order_by('fecha'))
+        ingresos_diarios = list(Ingreso.objects.values('fecha_valor').annotate(total=Sum('monto')).order_by('fecha_valor'))
+        gastos_diarios = list(Gasto.objects.values('fecha_valor').annotate(total=Sum('monto')).order_by('fecha_valor'))
 
-        # Formatear las fechas y convertir a JSON
+        # Preparar las etiquetas (fechas) y los datos para Chart.js
+        fechas = []
+        ingresos_totales = []
+        gastos_totales = []
+
         for ingreso in ingresos_diarios:
-            ingreso['fecha'] = ingreso['fecha'].strftime('%Y-%m-%d')
-            ingreso['total'] = float(ingreso['total'])
+            fechas.append(ingreso['fecha_valor'].strftime('%Y-%m-%d'))
+            ingresos_totales.append(float(ingreso['total']))
 
         for gasto in gastos_diarios:
-            gasto['fecha'] = gasto['fecha'].strftime('%Y-%m-%d')
-            gasto['total'] = float(gasto['total'])
+            if gasto['fecha_valor'].strftime('%Y-%m-%d') not in fechas:
+                fechas.append(gasto['fecha_valor'].strftime('%Y-%m-%d'))
+            gastos_totales.append(float(gasto['total']))
+
+        # Asegurarse de que las listas tienen el mismo tamaño
+        max_length = max(len(ingresos_totales), len(gastos_totales))
+        while len(ingresos_totales) < max_length:
+            ingresos_totales.append(0)
+        while len(gastos_totales) < max_length:
+            gastos_totales.append(0)
 
         # Añadir los datos al contexto
-        context['ingresos_diarios'] = json.dumps(ingresos_diarios)
-        context['gastos_diarios'] = json.dumps(gastos_diarios)
+        context['fechas'] = json.dumps(fechas)
+        context['ingresos_totales'] = json.dumps(ingresos_totales)
+        context['gastos_totales'] = json.dumps(gastos_totales)
 
         return context
+
+
 
 #GASTOS
 class AgregarGastoView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

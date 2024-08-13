@@ -32,4 +32,62 @@
         </div>
     </div>
 </div>
+
+<!-- Gráfico de Tendencias -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3>Gráficos de Tendencias</h3>
+        <canvas id="tendenciasChart"></canvas>
+    </div>
+</div>
+
+<!-- Incluir Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Configurar el gráfico -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('tendenciasChart').getContext('2d');
+    var tendenciasChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: JSON.parse('{{ fechas|safe }}'), // Etiquetas del eje X
+            datasets: [{
+                label: 'Ingresos',
+                data: JSON.parse('{{ ingresos_totales|safe }}'), // Datos de ingresos
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1
+            }, {
+                label: 'Gastos',
+                data: JSON.parse('{{ gastos_totales|safe }}'), // Datos de gastos
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Fecha'
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 10
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Monto'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}

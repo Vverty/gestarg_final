@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.contrib.auth.models import User  # Asegúrate de importar el modelo User
+from django.contrib.auth.models import User 
 from django.core.exceptions import ValidationError
 from .models import Profile, User
 

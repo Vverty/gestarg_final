@@ -1,10 +1,6 @@
 from django import forms
 from .models import Gasto, Ingreso, Cliente
 
-
-from django import forms
-from .models import Gasto
-
 class GastoForm(forms.ModelForm):
     class Meta:
         model = Gasto
@@ -15,7 +11,6 @@ class GastoForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        # El usuario actual se pasa como un argumento adicional
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
@@ -24,7 +19,6 @@ class GastoForm(forms.ModelForm):
             self.fields['usuario'].initial = user
             self.fields['usuario'].widget = forms.HiddenInput()  # Ocultar el campo en la interfaz
         
-        # El campo 'usuario' no debería ser obligatorio
         self.fields['usuario'].required = False
 
     def clean_fecha_valor(self):
@@ -56,7 +50,6 @@ class IngresoForm(forms.ModelForm):
     def clean_fecha_valor(self):
         fecha_valor = self.cleaned_data.get('fecha_valor')
         if not fecha_valor:
-            # Devuelve un mensaje personalizado si `fecha_valor` está vacío
             self.add_error('fecha_valor', 'Por favor, complete la fecha valor.')
         return fecha_valor
 

@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path
-from AppFinanzas import views
 from .views import *
 
 #GASTOS

@@ -1,5 +1,4 @@
 from django.urls import path
-from Landing import views
 from .views import *
 
 urlpatterns = [

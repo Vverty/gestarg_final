@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login, authenticate, update_session_auth_hash
 from .forms import UserRegisterForm, UserEditForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django import forms
 from .models import Profile
@@ -58,7 +57,7 @@ def editar_perfil(request):
         miFormulario = UserEditForm(request.POST, request.FILES, instance=usuario)
         if miFormulario.is_valid():
             miFormulario.save()
-            return redirect('EditarPerfil')  # Redirige a la página principal u otra página deseada
+            return redirect('EditarPerfil')  # Redirige a ediatr perfil
 
     else:
         miFormulario = UserEditForm(instance=usuario)

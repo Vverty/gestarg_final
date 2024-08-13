@@ -16,9 +16,6 @@ from django.urls import reverse_lazy
 from .models import Gasto, Ingreso, Cliente
 from .forms import GastoForm, IngresoForm, BuscarClienteForm, ClienteForm
 
-
-
-
 class InicioView(LoginRequiredMixin, TemplateView):
     template_name = 'AppFinanzas/index.html'
 

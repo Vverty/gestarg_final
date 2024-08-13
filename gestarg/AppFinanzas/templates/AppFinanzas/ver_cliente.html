@@ -1,0 +1,26 @@
+{% extends "AppFinanzas/base.html" %}
+
+{% block title %}Detalle del Cliente{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Detalle del Cliente</h1>
+
+<div class="card">
+    <div class="card-header">
+        Detalle del Cliente
+    </div>
+    <div class="card-body">
+        <p><strong>Razón Social:</strong> {{ cliente.razon_social }}</p>
+        <p><strong>Email:</strong> {{ cliente.email }}</p>
+        <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+        <p><strong>CUIT:</strong> {{ cliente.cuit }}</p>
+        <p><strong>Fecha de Onboarding:</strong> {{ cliente.fecha_onboarding }}</p>
+        <p><strong>Fecha de Salida:</strong> {{ cliente.fecha_salida }}</p>
+        <p><strong>Rubro:</strong> {{ cliente.rubro }}</p>
+        <p><strong>Usuario:</strong> {{ cliente.usuario.username }}</p>
+        <a href="{% url 'EditarCliente' cliente.id %}" class="btn btn-warning">Editar</a>
+        <a href="{% url 'EliminarCliente' cliente.id %}" class="btn btn-danger">Eliminar</a>
+        <a href="{% url 'MostrarClientes' %}" class="btn btn-primary">Volver</a>
+    </div>
+</div>
+{% endblock %}

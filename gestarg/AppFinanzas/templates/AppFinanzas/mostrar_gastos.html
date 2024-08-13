@@ -39,6 +39,7 @@
                         <td>{{ gasto.descripcion }}</td>
                         <td>${{ gasto.monto }}</td>
                         <td>
+                            <a href="{% url 'VerGasto' gasto.id %}" class="btn btn-info">Detalle</a>
                             <a href="{% url 'EditarGasto' gasto.id %}" class="btn btn-warning">Editar</a>
                             <a href="{% url 'EliminarGasto' gasto.id %}" class="btn btn-danger">Eliminar</a>
                         </td>

@@ -1,0 +1,24 @@
+{% extends "AppFinanzas/base.html" %}
+
+{% block title %}Detalle del Gasto{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Detalle del Gasto</h1>
+
+<div class="card">
+    <div class="card-header">
+        Detalle del Gasto
+    </div>
+    <div class="card-body">
+        <p><strong>Fecha:</strong> {{ gasto.fecha }}</p>
+        <p><strong>Fecha Valor:</strong> {{ gasto.fecha_valor }}</p>
+        <p><strong>Descripción:</strong> {{ gasto.descripcion }}</p>
+        <p><strong>Monto:</strong> ${{ gasto.monto }}</p>
+        <p><strong>Comentarios:</strong> {{ gasto.comentarios }}</p>
+        <p><strong>Usuario:</strong> {{ gasto.usuario.username }}</p>
+        <a href="{% url 'EditarGasto' gasto.id %}" class="btn btn-warning">Editar</a>
+        <a href="{% url 'EliminarGasto' gasto.id %}" class="btn btn-danger">Eliminar</a>
+        <a href="{% url 'MostrarGastos' %}" class="btn btn-primary">Volver</a>
+    </div>
+</div>
+{% endblock %}

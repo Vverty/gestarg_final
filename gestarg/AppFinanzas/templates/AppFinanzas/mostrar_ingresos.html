@@ -41,6 +41,7 @@
                         <td>${{ ingreso.monto }}</td>
                         <td>{{ ingreso.cliente.razon_social }}</td>
                         <td>
+                            <a href="{% url 'VerIngreso' ingreso.id %}" class="btn btn-info">Detalle</a>
                             <a href="{% url 'EditarIngreso' ingreso.id %}" class="btn btn-warning">Editar</a>
                             <a href="{% url 'EliminarIngreso' ingreso.id %}" class="btn btn-danger">Eliminar</a>
                         </td>

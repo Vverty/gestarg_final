@@ -1,5 +1,6 @@
 import json
 from decimal import Decimal
+import datetime
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
@@ -7,6 +8,7 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView
+from django.views.generic.detail import DetailView
 from django.db.models.functions import TruncDay
 from django.views.generic.edit import CreateView, UpdateView, DeleteView     
 from django.urls import reverse_lazy
@@ -54,6 +56,20 @@ class AgregarGastoView(LoginRequiredMixin, CreateView):
     template_name = 'AppFinanzas/agregar_gasto.html'
     success_url = reverse_lazy('MostrarGastos')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Añadir el usuario actual al kwargs para el formulario
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        # Asegurarse de que el campo usuario se establezca correctamente
+        if form.instance.fecha_valor is None:
+            form.instance.fecha_valor = self.request.POST.get('fecha_valor')  # Usa el valor del formulario o establece uno predeterminado
+        # Establecer el usuario directamente en el formulario antes de guardarlo
+        form.instance.usuario = self.request.user
+        return super().form_valid(form)
+    
 class MostrarGastosView(LoginRequiredMixin, ListView):
     model = Gasto
     template_name = 'AppFinanzas/mostrar_gastos.html'
@@ -79,11 +95,29 @@ class EditarGastoView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('MostrarGastos')
-    
-    def get_object(self, queryset=None):
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(Gasto, pk=pk)
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Añadir el usuario actual al kwargs para el formulario
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        # Asegurarse de que el campo usuario se establezca correctamente
+        if form.instance.fecha_valor is None:
+            form.instance.fecha_valor = self.request.POST.get('fecha_valor')  # Usa el valor del formulario o establece uno predeterminado
+        # Establecer el usuario directamente en el formulario antes de guardarlo
+        form.instance.usuario = self.request.user
+        return super().form_valid(form)
+
+class VerGastoView(LoginRequiredMixin, DetailView):
+    model = Gasto
+    template_name = 'AppFinanzas/ver_gasto.html'
+    context_object_name = 'gasto'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 class EliminarGastoView(LoginRequiredMixin, DeleteView):
     model = Gasto
@@ -102,6 +136,21 @@ class AgregarIngresoView(LoginRequiredMixin, CreateView):
     template_name = 'AppFinanzas/agregar_ingreso.html'
     success_url = reverse_lazy('MostrarIngresos')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Pasar el usuario actual al formulario
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        # Si fecha_valor no se ha proporcionado, establecerla en la fecha actual
+        if not form.cleaned_data.get('fecha_valor'):
+            form.instance.fecha_valor = datetime.date.today()  # O la fecha que prefieras
+
+        # Establecer el usuario directamente en el formulario antes de guardarlo
+        form.instance.usuario = self.request.user
+        return super().form_valid(form)
+
 class MostrarIngresosView(LoginRequiredMixin, ListView):
     model = Ingreso
     template_name = 'AppFinanzas/mostrar_ingresos.html'
@@ -119,6 +168,15 @@ class MostrarIngresosView(LoginRequiredMixin, ListView):
         context['query'] = self.request.GET.get('q', '')
         return context
 
+class VerIngresoView(LoginRequiredMixin, DetailView):
+    model = Ingreso
+    template_name = 'AppFinanzas/ver_ingreso.html'
+    context_object_name = 'ingreso'
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(Ingreso, pk=pk)
+
 class EditarIngresoView(LoginRequiredMixin, UpdateView):
     model = Ingreso
     form_class = IngresoForm
@@ -128,9 +186,16 @@ class EditarIngresoView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('MostrarIngresos')
 
-    def get_object(self, queryset=None):
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(Ingreso, pk=pk)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Pasar el usuario actual al formulario
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        # Establecer el usuario directamente en el formulario antes de guardarlo
+        form.instance.usuario = self.request.user
+        return super().form_valid(form)
 
 class EliminarIngresoView(LoginRequiredMixin, DeleteView):
     model = Ingreso
@@ -167,6 +232,11 @@ class MostrarClientesView(LoginRequiredMixin, ListView):
         context['form'] = self.form_class(self.request.GET or None)
         return context
 
+class VerClienteView(DetailView):
+    model = Cliente
+    template_name = 'AppFinanzas/ver_cliente.html'
+    context_object_name = 'cliente'
+    
 class AgregarClienteView(LoginRequiredMixin, CreateView):
     model = Cliente
     form_class = ClienteForm

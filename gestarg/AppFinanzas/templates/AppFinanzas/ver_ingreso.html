@@ -1,0 +1,25 @@
+{% extends "AppFinanzas/base.html" %}
+
+{% block title %}Detalle del Ingreso{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Detalle del Ingreso</h1>
+
+<div class="card">
+    <div class="card-header">
+        Detalle del Ingreso
+    </div>
+    <div class="card-body">
+        <p><strong>Fecha:</strong> {{ ingreso.fecha }}</p>
+        <p><strong>Fecha Valor:</strong> {{ ingreso.fecha_valor }}</p>
+        <p><strong>Descripción:</strong> {{ ingreso.descripcion }}</p>
+        <p><strong>Monto:</strong> ${{ ingreso.monto }}</p>
+        <p><strong>Cliente:</strong> {{ ingreso.cliente.razon_social }}</p>
+        <p><strong>Método de Pago:</strong> {{ ingreso.metodo_pago }}</p>
+        <p><strong>Usuario:</strong> {{ ingreso.usuario.username }}</p>
+        <a href="{% url 'EditarIngreso' ingreso.id %}" class="btn btn-warning">Editar</a>
+        <a href="{% url 'EliminarIngreso' ingreso.id %}" class="btn btn-danger">Eliminar</a>
+        <a href="{% url 'MostrarIngresos' %}" class="btn btn-primary">Volver</a>
+    </div>
+</div>
+{% endblock %}

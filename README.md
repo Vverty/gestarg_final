@@ -3,8 +3,10 @@
 GestArg es una aplicación web para gestionar los ingresos, gastos y clientes de tu emprendimiento.
 La misma fue realizada por mí (**Felipe Lorenzo**), con el objetivo de armar el proyecto final del curso de Python de Coderhouse.
 
-Link a video de prueba de web: https://www.youtube.com/watch?v=xNJUvNSxPxU
-Link a Excel con casos de prueba: https://docs.google.com/spreadsheets/d/14IC8aXe93HsWkp_yVPUe0yr4FKvNER_o70lpPoGyXD0/edit?usp=sharing
+## Recursos del Proyecto
+
+- **Video de prueba de la web:** [Ver Video](https://www.youtube.com/watch?v=xNJUvNSxPxU)
+- **Excel con casos de prueba:** [Ver Excel](https://docs.google.com/spreadsheets/d/14IC8aXe93HsWkp_yVPUe0yr4FKvNER_o70lpPoGyXD0/edit?usp=sharing)
 
 ## Instalación
 
@@ -40,9 +42,11 @@ Link a Excel con casos de prueba: https://docs.google.com/spreadsheets/d/14IC8aX
     ```bash
     python manage.py runserver
 
-# AppFinanzas
+# AppFinanzas, Users y Landing.
 
 AppFinanzas: Unica aplicación que se encarga de manejar los ingresos, gastos y clientes.
+Users: Maneja los login, registros y edición de usuarios.
+Landing: Da estructura a la web sin login del proyecto.
 
 ## Modelos
 
@@ -56,13 +60,15 @@ AppFinanzas: Unica aplicación que se encarga de manejar los ingresos, gastos y 
 - **ClienteForm:** Formulario para crear y actualizar instancias de Cliente.
 - **IngresoForm:** Formulario para crear y actualizar instancias de Ingreso.
 - **GastoForm:** Formulario para crear y actualizar instancias de Gasto.
-- **BuscarClienteForm:** Formulario para buscar clientes por razon social o email.
+- **BuscarClienteForm:** Formulario para buscar clientes por razon social o email. 
+- **UserRegisterForm** Maneja el registro de usuarios.
+- **UserEditForm** Maneja la edición de usuarios.
 
 ## <> ##
 
 ## Uso de la Página Web
 
-La aplicación **AppFinanzas** proporciona una interfaz web para gestionar ingresos, gastos y clientes.
+La aplicación GestArg proporciona una interfaz web para gestionar ingresos, gastos y clientes.
 
 1. **Navegación**: Utiliza el menú navegable en el margen izquierdo para moverte entre las secciones de **Ingresos**, **Gastos**,  **Clientes** y **ManejarStaff**.
 

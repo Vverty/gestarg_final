@@ -40,9 +40,10 @@
             <div class="col-md-12">
                 {{ mi_form.profile_image.label_tag }}
                 {{ mi_form.profile_image }}
-                {% if user.profile.profile_image and user.profile.profile_image.url %}
+                {% if usuario.profile.profile_image and usuario.profile.profile_image.url %}
                     <div class="mb-3">
-                        <img src="{{ user.profile.profile_image.url }}" alt="Imagen de Perfil" style="max-width: 150px; max-height: 150px; border-radius: 50%;">
+                        <img src="{{ usuario.profile.profile_image.url }}" alt="Imagen de Perfil" style="max-width: 150px; max-height: 150px; border-radius: 50%;">
+                        <p><a href="{% url 'EliminarImagen' %}" class="btn btn-danger mt-2">Eliminar Imagen</a></p>
                     </div>
                 {% endif %}
                 <div class="invalid-feedback">

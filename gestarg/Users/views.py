@@ -56,13 +56,15 @@ def editar_perfil(request):
     if request.method == 'POST':
         miFormulario = UserEditForm(request.POST, request.FILES, instance=usuario)
         if miFormulario.is_valid():
+            # Guardar el formulario, incluyendo la lógica para eliminar la imagen si es necesario
             miFormulario.save()
-            return redirect('EditarPerfil')  # Redirige a ediatr perfil
+            return redirect('EditarPerfil')  # Redirige a la vista de perfil editado
 
     else:
         miFormulario = UserEditForm(instance=usuario)
 
     return render(request, "Users/edit_user.html", {"mi_form": miFormulario, "usuario": usuario})
+
 
 
 @login_required
@@ -108,4 +110,12 @@ class ManageStaffView(UserPassesTestMixin, ListView):
             user.delete()
 
         return redirect('ManageStaff')
+    
+@login_required
+def eliminar_imagen(request):
+    usuario = request.user
+    profile, created = Profile.objects.get_or_create(user=usuario)
+    profile.profile_image = None
+    profile.save()
+    return redirect('EditarPerfil')
 

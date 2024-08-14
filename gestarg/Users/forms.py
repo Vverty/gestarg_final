@@ -28,6 +28,7 @@ class UserEditForm(forms.ModelForm):
     first_name = forms.CharField(label='Nombre')
     last_name = forms.CharField(label='Apellido')
     profile_image = forms.ImageField(label='Imagen de Perfil', required=False)
+    remove_profile_image = forms.BooleanField(required=False, label="Eliminar imagen de perfil")
 
     class Meta:
         model = User
@@ -44,10 +45,13 @@ class UserEditForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         profile_image = self.cleaned_data.get('profile_image')
+        remove_profile_image = self.cleaned_data.get('remove_profile_image')
         if commit:
             user.save()
             profile, created = Profile.objects.get_or_create(user=user)
-            if profile_image:
+            if remove_profile_image:
+                profile.profile_image = None
+            elif profile_image:
                 profile.profile_image = profile_image
             profile.save()
         return user

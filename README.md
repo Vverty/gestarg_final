@@ -1,6 +1,10 @@
 # GestArg
 
-GestArg es una aplicación web para gestionar los ingresos y gastos de tu emprendimiento.
+GestArg es una aplicación web para gestionar los ingresos, gastos y clientes de tu emprendimiento.
+La misma fue realizada por mí (**Felipe Lorenzo**), con el objetivo de armar el proyecto final del curso de Python de Coderhouse.
+
+Link a video de prueba de web: https://www.youtube.com/watch?v=xNJUvNSxPxU
+Link a Excel con casos de prueba: 
 
 ## Instalación
 
@@ -26,7 +30,7 @@ GestArg es una aplicación web para gestionar los ingresos y gastos de tu empren
     python manage.py makemigrations
     python manage.py migrate
 
-5. Crea un superusuario para acceder al panel de administración:
+5. Crea un superusuario para acceder al panel de administración y acceder a todas las funcionalidad de la página:
 
     ```bash
     python manage.py createsuperuser
@@ -45,35 +49,7 @@ AppFinanzas: Unica aplicación que se encarga de manejar los ingresos, gastos y 
 - **Cliente:** Modela los datos de los clientes, incluyendo razón social, email y teléfono.
 - **Ingreso:** Representa un ingreso, con atributos como fecha, descripción, monto y cliente.
 - **Gasto:** Representa un gasto, con atributos similares a los de Ingreso.
-
-## Vistas
-
-- **agregar_cliente:** Vista para agregar un nuevo cliente.
-- **mostrar_clientes:** Vista para mostrar la lista de clientes.
-- **editar_cliente:** Vista para editar los datos de un cliente existente.
-- **eliminar_cliente:** Vista para eliminar un cliente.
-- **agregar_ingreso:** Vista para agregar un nuevo ingreso.
-- **mostrar_ingresos:** Vista para mostrar la lista de ingresos.
-- **editar_ingreso:** Vista para editar los datos de un ingreso existente.
-- **eliminar_ingreso:** Vista para eliminar un ingreso.
-- **agregar_gasto:** Vista para agregar un nuevo gasto.
-- **mostrar_gastos:** Vista para mostrar la lista de gastos.
-- **editar_gasto:** Vista para editar los datos de un gasto existente.
-- **eliminar_gasto:** Vista para eliminar un gasto.
-
-## Plantillas
-
-- **base.html:** Plantilla base para la estructura general del sitio.
-- **index.html:** Página de inicio con tarjetas que muestran el total de ingresos, gastos y cantidad de clientes.
-- **mostrar_clientes.html:** Plantilla para mostrar la lista de clientes con opciones para buscar, agregar, editar y eliminar.
-- **mostrar_ingresos.html:** Plantilla para mostrar la lista de ingresos con opciones para buscar, agregar, editar y eliminar.
-- **mostrar_gastos.html:** Plantilla para mostrar la lista de gastos con opciones para buscar, agregar, editar y eliminar.
-- **agregar_cliente.html:** Formulario para agregar un nuevo cliente.
-- **agregar_ingreso.html:** Formulario para agregar un nuevo ingreso.
-- **agregar_gasto.html:** Formulario para agregar un nuevo gasto.
-- **editar_cliente.html:** Formulario para editar un cliente existente.
-- **editar_ingreso.html:** Formulario para editar un ingreso existente.
-- **editar_gasto.html:** Formulario para editar un gasto existente.
+- **Profile:** Maneja los IDs de las fotos de perfil de los usuarios que se almacenan en Media.
 
 ## Formularios
 
@@ -88,7 +64,7 @@ AppFinanzas: Unica aplicación que se encarga de manejar los ingresos, gastos y 
 
 La aplicación **AppFinanzas** proporciona una interfaz web para gestionar ingresos, gastos y clientes.
 
-1. **Navegación**: Utiliza el menú navegable en el margen izquierdo para moverte entre las secciones de **Ingresos**, **Gastos** y **Clientes**.
+1. **Navegación**: Utiliza el menú navegable en el margen izquierdo para moverte entre las secciones de **Ingresos**, **Gastos**,  **Clientes** y **ManejarStaff**.
 
 2. **Gestión de Ingresos**:
    - **Agregar Ingreso**: Accede a la vista de agregar un nuevo ingreso desde la sección de ingresos.
@@ -101,6 +77,9 @@ La aplicación **AppFinanzas** proporciona una interfaz web para gestionar ingre
 4. **Gestión de Clientes**:
    - **Agregar Cliente**: Accede a la vista de agregar un nuevo cliente desde la sección de clientes.
    - **Mostrar Clientes**: Visualiza la lista de clientes, con opciones para buscar, editar o eliminar clientes existentes.
+
+5. **Manejo de Staff**:
+   - **Gestión de usuarios**: Accede a la vista para eliminar usuarios o darles perfil de Staff para que puedan hacer un CRUD completo.
 
 Cada sección permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre los modelos correspondientes, facilitando la gestión completa de tus datos financieros y de clientes.
 

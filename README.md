@@ -4,7 +4,7 @@ GestArg es una aplicación web para gestionar los ingresos, gastos y clientes de
 La misma fue realizada por mí (**Felipe Lorenzo**), con el objetivo de armar el proyecto final del curso de Python de Coderhouse.
 
 Link a video de prueba de web: https://www.youtube.com/watch?v=xNJUvNSxPxU
-Link a Excel con casos de prueba: 
+Link a Excel con casos de prueba: https://docs.google.com/spreadsheets/d/14IC8aXe93HsWkp_yVPUe0yr4FKvNER_o70lpPoGyXD0/edit?usp=sharing
 
 ## Instalación
 
@@ -30,7 +30,7 @@ Link a Excel con casos de prueba:
     python manage.py makemigrations
     python manage.py migrate
 
-5. Crea un superusuario para acceder al panel de administración y acceder a todas las funcionalidad de la página:
+5. Crea un **superusuario** para acceder al panel de administración y acceder a todas las funcionalidad de la página:
 
     ```bash
     python manage.py createsuperuser
